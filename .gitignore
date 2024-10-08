@@ -128,3 +128,11 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+# 컴파일된 파일 
+*.tfstate 
+*.tfstate.backup 
+.terraform.tfstate.lock.info
+
+# 모듈 디렉토리 
+.terraform/

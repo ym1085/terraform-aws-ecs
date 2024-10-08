@@ -1,0 +1,75 @@
+pipeline {
+    agent any
+    stages {
+        stage('Git Clone') {
+            steps {
+                script {
+                    try {
+                        // Git clone from Code Commit
+                        git url: "<Code Commit URL>", branch: "master", credentialsId: "$GIT_CREDENTIALS_ID"
+                        sh "sudo rm -rf ./.git"
+                        env.cloneResult=true
+                    } catch (error) {
+                        print(error)
+                        env.cloneResult=false
+                        currentBuild.result = 'FAILURE'
+                    }
+                }
+            }
+        }
+        stage('ECR Upload') {
+            steps{
+                script{
+                    try {                     
+                        withAWS(role: '{arn:aws:iam::65xxxxxxxxxxxx:role/jenkins-role}', roleAccount: '{65xxxxxxxxxxxx}', externalId:'externalId') {
+                            sh 'aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin {65xxxxxxxxxxxx.dkr.ecr.ap-northeast-2.amazonaws.com/nodejs}'
+                            sh 'docker build -t nodejs .'
+                            sh 'docker tag nodejs:latest {65xxxxxxxxxxxx.dkr.ecr.ap-northeast-2.amazonaws.com/nodejs}/nodejs:latest'
+                            sh 'docker push {65xxxxxxxxxxxx.dkr.ecr.ap-northeast-2.amazonaws.com/nodejs}/nodejs:latest'
+                        }
+                    } catch (error) {
+                        print(error)
+                        echo 'Remove Deploy Files'
+                        sh "sudo rm -rf /var/lib/jenkins/workspace/${env.JOB_NAME}/*"
+                        currentBuild.result = 'FAILURE'
+                    }
+                }
+            }
+            post {
+                success {
+                    echo "The ECR Upload stage successfully."
+                }
+                failure {
+                    echo "The ECR Upload stage failed."
+                }
+            }
+        }
+        stage('Deploy'){
+            steps {
+                script{
+                    try {
+                        withAWS(role: '{arn:aws:iam::65xxxxxxxxxxxx:role/jenkins-role}', roleAccount: '{65xxxxxxxxxxxx}', externalId:'externalId') {
+                            sh"""
+                                aws ecs update-service --region ap-northeast-2 --cluster {node-test-cluster} --service {node-test-service} --force-new-deployment
+                            """
+                        }
+                        
+                    } catch (error) {
+                        print(error)
+                        echo 'Remove Deploy Files'
+                        sh "sudo rm -rf /var/lib/jenkins/workspace/${env.JOB_NAME}/*"
+                        currentBuild.result = 'FAILURE'
+                    }
+                }
+            }
+            post {
+                success {
+                    echo "The deploy stage successfully."
+                }
+                failure {
+                    echo "The deploy stage failed."
+                }
+            }
+        }
+    }
+}
