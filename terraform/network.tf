@@ -23,8 +23,8 @@ resource "aws_vpc" "main" {
 # newbits: 서브넷을 만들기 위해 추가할 비트 수, ex) 기존 /16 -> '8' 지정 -> /24 서브넷 생성
 # netnum: 서브넷 번호
 resource "aws_subnet" "public_subnet" {
-  count = var.az_count
-  cidr_block              = cidrsubnet(aws_vpc.main.cidr_block, 8, (count.index + 10) * 1)
+  count      = var.az_count
+  cidr_block = cidrsubnet(aws_vpc.main.cidr_block, 8, (count.index + 10) * 1)
   # cidr_block              = "172.21.${var.public_base_subnet_cidr[count.index]}.0/24"
   availability_zone       = data.aws_availability_zones.available.names[count.index]
   vpc_id                  = aws_vpc.main.id
@@ -33,8 +33,8 @@ resource "aws_subnet" "public_subnet" {
 
 # Private Subnet 생성
 resource "aws_subnet" "private_subnet" {
-  count = var.az_count
-  cidr_block        = cidrsubnet(aws_vpc.main.cidr_block, 8, (count.index + 50) * 1)
+  count      = var.az_count
+  cidr_block = cidrsubnet(aws_vpc.main.cidr_block, 8, (count.index + 50) * 1)
   # cidr_block        = "172.21.${var.private_base_subnet_cidr[count.index]}.0/24"
   availability_zone = data.aws_availability_zones.available.names[count.index]
   vpc_id            = aws_vpc.main.id
@@ -59,13 +59,13 @@ resource "aws_route" "public" {
 
 # NAT에 사용할 EIP 생성
 resource "aws_eip" "gw" {
-  domain = "vpc"
-  depends_on = [ aws_internet_gateway.gw ] # IGW가 존재해야 EIP 생성 가능
+  domain     = "vpc"
+  depends_on = [aws_internet_gateway.gw] # IGW가 존재해야 EIP 생성 가능
 }
 
 # Public Subnet A zone에 NAT Gateway 생성
 resource "aws_nat_gateway" "gw" {
-  subnet_id = aws_subnet.public_subnet[0].id # 172.21.10.0/24 a zone에 NAT 생성
+  subnet_id     = aws_subnet.public_subnet[0].id # 172.21.10.0/24 a zone에 NAT 생성
   allocation_id = aws_eip.gw.id
 }
 
@@ -73,14 +73,14 @@ resource "aws_nat_gateway" "gw" {
 resource "aws_route_table" "private" {
   vpc_id = aws_vpc.main.id
   route {
-    cidr_block = "0.0.0.0/0" # 0.0.0.0/0 모든 트래픽을 NAT Gateway로 라우팅
+    cidr_block     = "0.0.0.0/0" # 0.0.0.0/0 모든 트래픽을 NAT Gateway로 라우팅
     nat_gateway_id = aws_nat_gateway.gw.id
   }
 }
 
 # Private Subnet과 프라이빗 라우팅 테이블 연결
 resource "aws_route_table_association" "private" {
-  count = var.az_count
-  subnet_id = element(aws_subnet.private_subnet.*.id, count.index) # 프라이빗 서브넷 ID 참조
-  route_table_id = aws_route_table.private.id # 프라이빗 라우팅 테이블과 연결
+  count          = var.az_count
+  subnet_id      = element(aws_subnet.private_subnet.*.id, count.index) # 프라이빗 서브넷 ID 참조
+  route_table_id = aws_route_table.private.id                           # 프라이빗 라우팅 테이블과 연결
 }

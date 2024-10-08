@@ -16,5 +16,7 @@
 | `variables.tf`     | Terraform 변수 정의 파일                 |
 | `outputs.tf`       | Terraform deploy 작업이 끝난 후 출력값 정의 |
 
+## Reference
+
 - [Hashicorp Terraform installation](https://developer.hashicorp.com/terraform/install)
 - [Deploying Containers on Amazon’s ECS using Fargate and Terraform: Part 2](https://medium.com/@bradford_hamilton/deploying-containers-on-amazons-ecs-using-fargate-and-terraform-part-2-2e6f6a3a957f)
