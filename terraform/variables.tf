@@ -56,3 +56,19 @@ variable "fargate_memory" {
   description = "Fargate instance memory to provision (in MiB)"
   default     = "2048"
 }
+
+# Public Subnet CIDR Block 시작 값
+# 172.21.10.0/24, 172.21.20.0/24, 172.21.30.0/24
+variable "public_base_subnet_cidr" {
+  description = "Base CIDR block for public subnets"
+  type        = list(number)
+  default     = [10, 20, 30]
+}
+
+# Private Subnet CIDR Block 시작 값
+# 172.21.50.0/24, 172.21.60.0/24, 172.21.70.0/24
+variable "private_base_subnet_cidr" {
+  description = "Increment value for CIDR blocks"
+  type        = list(number)
+  default     = [50, 60, 70]
+}
