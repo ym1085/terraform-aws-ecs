@@ -1,0 +1,82 @@
+digraph G {
+    rankdir = "RL";
+    node [shape = rect; fontname = "sans-serif";];
+    subgraph "cluster_module.alb" {
+        label = "module.alb";
+        fontname = "sans-serif";
+        "module.alb.aws_lb.alb" [label = "aws_lb.alb";];
+        "module.alb.aws_lb_listener.alb_listener" [label = "aws_lb_listener.alb_listener";];
+        "module.alb.aws_lb_target_group.alb_target_group" [label = "aws_lb_target_group.alb_target_group";];
+    }
+    subgraph "cluster_module.ecs" {
+        label = "module.ecs";
+        fontname = "sans-serif";
+        "module.ecs.aws_ecs_cluster.cluster" [label = "aws_ecs_cluster.cluster";];
+        "module.ecs.aws_ecs_service.service" [label = "aws_ecs_service.service";];
+        "module.ecs.aws_ecs_task_definition.task_definition" [label = "aws_ecs_task_definition.task_definition";];
+        "module.ecs.aws_iam_role.ecs_task_execution_role" [label = "aws_iam_role.ecs_task_execution_role";];
+        "module.ecs.aws_iam_role_policy_attachment.ecs_task_execution_role_policy" [label = "aws_iam_role_policy_attachment.ecs_task_execution_role_policy";];
+    }
+    subgraph "cluster_module.gateway" {
+        label = "module.gateway";
+        fontname = "sans-serif";
+        "module.gateway.aws_eip.nat" [label = "aws_eip.nat";];
+        "module.gateway.aws_internet_gateway.gw" [label = "aws_internet_gateway.gw";];
+        "module.gateway.aws_nat_gateway.gw" [label = "aws_nat_gateway.gw";];
+    }
+    subgraph "cluster_module.route_tables" {
+        label = "module.route_tables";
+        fontname = "sans-serif";
+        "module.route_tables.aws_route_table.private" [label = "aws_route_table.private";];
+        "module.route_tables.aws_route_table.public" [label = "aws_route_table.public";];
+        "module.route_tables.aws_route_table_association.private" [label = "aws_route_table_association.private";];
+        "module.route_tables.aws_route_table_association.public" [label = "aws_route_table_association.public";];
+    }
+    subgraph "cluster_module.security_groups" {
+        label = "module.security_groups";
+        fontname = "sans-serif";
+        "module.security_groups.aws_security_group.alb_sg" [label = "aws_security_group.alb_sg";];
+        "module.security_groups.aws_security_group.ecs_task_sg" [label = "aws_security_group.ecs_task_sg";];
+    }
+    subgraph "cluster_module.subnets" {
+        label = "module.subnets";
+        fontname = "sans-serif";
+        "module.subnets.data.aws_availability_zones.available" [label = "data.aws_availability_zones.available";];
+        "module.subnets.aws_subnet.private" [label = "aws_subnet.private";];
+        "module.subnets.aws_subnet.public" [label = "aws_subnet.public";];
+    }
+    subgraph "cluster_module.vpc" {
+        label = "module.vpc";
+        fontname = "sans-serif";
+        "module.vpc.data.aws_availability_zones.available" [label = "data.aws_availability_zones.available";];
+        "module.vpc.aws_vpc.main" [label = "aws_vpc.main";];
+    }
+    "module.alb.aws_lb.alb" -> "module.security_groups.aws_security_group.alb_sg";
+    "module.alb.aws_lb.alb" -> "module.subnets.aws_subnet.public";
+    "module.alb.aws_lb_listener.alb_listener" -> "module.alb.aws_lb.alb";
+    "module.alb.aws_lb_listener.alb_listener" -> "module.alb.aws_lb_target_group.alb_target_group";
+    "module.alb.aws_lb_target_group.alb_target_group" -> "module.vpc.aws_vpc.main";
+    "module.ecs.aws_ecs_service.service" -> "module.alb.aws_lb_listener.alb_listener";
+    "module.ecs.aws_ecs_service.service" -> "module.ecs.aws_ecs_cluster.cluster";
+    "module.ecs.aws_ecs_service.service" -> "module.ecs.aws_ecs_task_definition.task_definition";
+    "module.ecs.aws_ecs_service.service" -> "module.security_groups.aws_security_group.ecs_task_sg";
+    "module.ecs.aws_ecs_service.service" -> "module.subnets.aws_subnet.private";
+    "module.ecs.aws_ecs_task_definition.task_definition" -> "module.ecs.aws_iam_role.ecs_task_execution_role";
+    "module.ecs.aws_iam_role_policy_attachment.ecs_task_execution_role_policy" -> "module.ecs.aws_iam_role.ecs_task_execution_role";
+    "module.gateway.aws_eip.nat" -> "module.gateway.aws_internet_gateway.gw";
+    "module.gateway.aws_internet_gateway.gw" -> "module.vpc.aws_vpc.main";
+    "module.gateway.aws_nat_gateway.gw" -> "module.gateway.aws_eip.nat";
+    "module.gateway.aws_nat_gateway.gw" -> "module.subnets.aws_subnet.public";
+    "module.route_tables.aws_route_table.private" -> "module.gateway.aws_nat_gateway.gw";
+    "module.route_tables.aws_route_table.public" -> "module.gateway.aws_internet_gateway.gw";
+    "module.route_tables.aws_route_table_association.private" -> "module.route_tables.aws_route_table.private";
+    "module.route_tables.aws_route_table_association.private" -> "module.subnets.aws_subnet.private";
+    "module.route_tables.aws_route_table_association.public" -> "module.route_tables.aws_route_table.public";
+    "module.route_tables.aws_route_table_association.public" -> "module.subnets.aws_subnet.public";
+    "module.security_groups.aws_security_group.alb_sg" -> "module.vpc.aws_vpc.main";
+    "module.security_groups.aws_security_group.ecs_task_sg" -> "module.security_groups.aws_security_group.alb_sg";
+    "module.subnets.aws_subnet.private" -> "module.subnets.data.aws_availability_zones.available";
+    "module.subnets.aws_subnet.private" -> "module.vpc.aws_vpc.main";
+    "module.subnets.aws_subnet.public" -> "module.subnets.data.aws_availability_zones.available";
+    "module.subnets.aws_subnet.public" -> "module.vpc.aws_vpc.main";
+}

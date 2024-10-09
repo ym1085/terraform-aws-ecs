@@ -1,10 +1,9 @@
-# VPC CIDR Block 지정
-variable "vpc_cidr_block" {
+variable "vpc_id" {
   type = string
 }
 
-# VPC ID 지정
-variable "vpc_id" {
+# VPC CIDR Block 지정
+variable "vpc_cidr_block" {
   type = string
 }
 

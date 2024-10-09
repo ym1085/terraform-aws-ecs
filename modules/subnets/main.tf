@@ -1,3 +1,5 @@
+data "aws_availability_zones" "available" {}
+
 # Public Subnet 생성
 # Public Subnet CIDR 172.21.10.0/24, 172.21.20.0/24, 172.21.30.0/24
 resource "aws_subnet" "public" {
