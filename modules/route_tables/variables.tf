@@ -21,11 +21,3 @@ variable "nat_gateway_id" {
 variable "environment" {
   type = string
 }
-
-variable "main_route_table_id" {
-  type = string
-}
-
-variable "internet_gateway_id" {
-  type = string
-}

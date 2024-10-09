@@ -1,15 +1,15 @@
 # Fargate CPU 지정
-variable "fargate_cpu" {
+variable "ecs_fargate_task_total_cpu" {
   type = string
 }
 
 # Fargate Memory 지정
-variable "fargate_memory" {
+variable "ecs_fargate_task_total_mem" {
   type = string
 }
 
 # Desired Count 지정
-variable "desired_count" {
+variable "ecs_task_desired_count" {
   type = number
 }
 
@@ -19,12 +19,17 @@ variable "private_subnet_ids" {
 }
 
 # ECS Security Group ID 지정
-variable "ecs_sg_id" {
+variable "ecs_task_sg_id" {
   type = string
 }
 
 # Target Group ARN 지정
-variable "target_group_arn" {
+variable "alb_target_group_arn" {
+  type = string
+}
+
+# ALB Listener ARN
+variable "alb_listener_arn" {
   type = string
 }
 

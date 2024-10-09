@@ -3,9 +3,9 @@ resource "aws_ecs_cluster" "cluster" {
   name = "${var.environment}-cluster"
 }
 
-data "template_file" "container_definitions" {
-  template = file("./templates/ecs/")
-}
+# data "template_file" "container_definitions" {
+#   template = file("./ecs/")
+# }
 
 # ECS Task 생성
 resource "aws_ecs_task_definition" "task_definition" {
@@ -13,8 +13,8 @@ resource "aws_ecs_task_definition" "task_definition" {
   execution_role_arn       = aws_iam_role.ecs_task_execution_role.arn
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
-  cpu                      = var.fargate_cpu
-  memory                   = var.fargate_memory
+  cpu                      = var.ecs_fargate_task_total_cpu
+  memory                   = var.ecs_fargate_task_total_mem
 
   # TODO: 수정 필요
   container_definitions = jsonencode([
@@ -38,21 +38,21 @@ resource "aws_ecs_service" "service" {
   cluster         = aws_ecs_cluster.cluster.id
   task_definition = aws_ecs_task_definition.task_definition.arn
   launch_type     = "FARGATE"
-  desired_count   = var.desired_count
+  desired_count   = var.ecs_task_desired_count
 
   network_configuration {
     subnets          = var.private_subnet_ids
-    security_groups  = [var.ecs_sg_id]
+    security_groups  = [var.ecs_task_sg_id]
     assign_public_ip = false
   }
 
   load_balancer {
-    target_group_arn = var.target_group_arn
+    target_group_arn = var.alb_target_group_arn
     container_name   = "${var.environment}-container"
     container_port   = var.container_port
   }
 
-  depends_on = [aws_lb_listener.alb_listener]
+  depends_on = [var.alb_listener_arn]
 }
 
 # ECS Task Execution Role 생성

@@ -9,7 +9,6 @@ resource "aws_internet_gateway" "gw" {
 
 # NAT 게이트웨이에서 사용할 EIP 생성
 resource "aws_eip" "nat" {
-  domain     = "vpc"
   depends_on = [aws_internet_gateway.gw] # IGW가 생성된 후 EIP 생성 가능
 }
 
