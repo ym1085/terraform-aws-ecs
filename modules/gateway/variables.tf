@@ -12,3 +12,8 @@ variable "public_subnet_id" {
 variable "environment" {
   type = string
 }
+
+# 서비스 구분 이름 지정
+variable "domain" {
+  type = string
+}

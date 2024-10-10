@@ -6,7 +6,7 @@ resource "aws_route_table" "public" {
     gateway_id = var.internet_gateway_id
   }
   tags = {
-    Name = "${var.environment}-public-route-table"
+    Name = "${var.domain}-public-route-table-${var.environment}"
   }
 }
 
@@ -25,7 +25,7 @@ resource "aws_route_table" "private" {
     nat_gateway_id = var.nat_gateway_id
   }
   tags = {
-    Name = "${var.environment}-private-route-table"
+    Name = "${var.domain}-private-route-table-${var.environment}"
   }
 }
 

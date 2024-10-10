@@ -47,3 +47,8 @@ variable "container_image" {
 variable "container_port" {
   type = number
 }
+
+# 서비스 구분 이름 지정
+variable "domain" {
+  type = string
+}

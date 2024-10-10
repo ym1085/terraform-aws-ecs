@@ -1,6 +1,6 @@
 # ALB 생성
 resource "aws_lb" "alb" {
-  name               = "${var.environment}-alb"
+  name               = "${var.domain}-alb-${var.environment}"
   load_balancer_type = "application"
   subnets            = var.public_subnet_ids
   security_groups    = [var.alb_sg_id]
@@ -8,7 +8,7 @@ resource "aws_lb" "alb" {
 
 # ALB Target Group 생성
 resource "aws_lb_target_group" "alb_target_group" {
-  name     = "${var.environment}-tg"
+  name     = "${var.domain}-tg-${var.environment}"
   port     = var.container_port
   protocol = "HTTP"
   vpc_id   = var.vpc_id
