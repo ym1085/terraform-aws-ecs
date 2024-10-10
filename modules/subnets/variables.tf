@@ -1,3 +1,4 @@
+# VPC ID 지정
 variable "vpc_id" {
   type = string
 }
@@ -14,5 +15,10 @@ variable "az_count" {
 
 # 환경 지정
 variable "environment" {
+  type = string
+}
+
+# 서비스 구분 이름 지정
+variable "domain" {
   type = string
 }

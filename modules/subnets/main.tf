@@ -9,7 +9,7 @@ resource "aws_subnet" "public" {
   vpc_id                  = var.vpc_id
   map_public_ip_on_launch = true
   tags = {
-    Name = "${var.environment}-public-subnet-${count.index}"
+    Name = "${var.domain}-public-subnet-${var.environment}-${count.index + 1}"
   }
 }
 
@@ -22,6 +22,6 @@ resource "aws_subnet" "private" {
   vpc_id                  = var.vpc_id
   map_public_ip_on_launch = false
   tags = {
-    Name = "${var.environment}-private-subnet-${count.index}"
+    Name = "${var.domain}-private-subnet-${var.environment}-${count.index + 1}"
   }
 }

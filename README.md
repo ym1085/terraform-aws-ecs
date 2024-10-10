@@ -16,6 +16,50 @@
 | `variables.tf`     | Terraform 변수 정의 파일                 |
 | `outputs.tf`       | Terraform deploy 작업이 끝난 후 출력값 정의 |
 
+## How to execute terrform?
+
+> Jenkins CI/CD 테스트를 위해 간단한 ECS 환경을 구성하기 위해 Terraform 사용  
+
+```shell
+# move to module folder
+cd ./modules
+```
+
+```shell
+# setting env variable to terraform.tfvars file
+cat <<EOF > terraform.tfvars
+vpc_cidr_block = "172.21.0.0/16"
+vpc_name       = "test_vpc"
+
+az_count    = 2
+environment = "dev"
+
+alb_listener_port = "80"
+container_port    = 3000
+container_image   = "6xxxxxxxxxxxxx.dkr.ecr.ap-northeast-2.amazonaws.com/nodejs"
+
+ecs_fargate_task_total_cpu = 2048
+ecs_fargate_task_total_mem = 1024
+ecs_task_desired_count     = 1
+domain                     = "search"
+EOF
+```
+
+```shell
+# initialize terraform project
+$ terraform init
+```
+
+```shell
+# check terraform plan
+$ terraform plan
+```
+
+```shell
+# apply terraform resource
+$ terraform apply
+```
+
 ## Reference
 
 - [Hashicorp Terraform installation](https://developer.hashicorp.com/terraform/install)

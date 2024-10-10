@@ -3,7 +3,7 @@ module "vpc" {
 
   vpc_cidr_block = var.vpc_cidr_block
   vpc_name       = var.vpc_name
-  environment    = "dev"
+  environment    = var.environment
 }
 
 module "subnets" {
@@ -13,6 +13,8 @@ module "subnets" {
   vpc_cidr_block = module.vpc.vpc_cidr_block
   az_count       = var.az_count
   environment    = var.environment
+  domain         = var.domain
+  depends_on     = [module.vpc]
 }
 
 module "security_groups" {
@@ -22,6 +24,8 @@ module "security_groups" {
   alb_listener_port = var.alb_listener_port
   container_port    = var.container_port
   environment       = var.environment
+  domain            = var.domain
+  depends_on        = [module.vpc]
 }
 
 module "gateway" {
@@ -30,6 +34,8 @@ module "gateway" {
   vpc_id           = module.vpc.vpc_id
   public_subnet_id = module.subnets.public_subnet_id
   environment      = var.environment
+  domain           = var.domain
+  depends_on       = [module.vpc]
 }
 
 module "route_tables" {
@@ -41,6 +47,8 @@ module "route_tables" {
   internet_gateway_id = module.gateway.internet_gateway_id
   nat_gateway_id      = module.gateway.nat_gateway_id
   environment         = var.environment
+  domain              = var.domain
+  depends_on          = [module.vpc]
 }
 
 module "alb" {
@@ -52,6 +60,8 @@ module "alb" {
   alb_listener_port = var.alb_listener_port
   container_port    = var.container_port
   environment       = var.environment
+  domain            = var.domain
+  depends_on        = [module.vpc]
 }
 
 module "ecs" {
@@ -68,4 +78,5 @@ module "ecs" {
   environment     = var.environment
   container_image = var.container_image
   container_port  = var.container_port
+  domain          = var.domain
 }
