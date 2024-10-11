@@ -12,6 +12,7 @@ resource "aws_lb_target_group" "alb_target_group" {
   port     = var.container_port
   protocol = "HTTP"
   vpc_id   = var.vpc_id
+  target_type = "ip" # ecs fargate의 경우 ip 타입으로 설정 필요
 }
 
 # ALB Listener 생성

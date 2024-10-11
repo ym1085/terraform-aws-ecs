@@ -51,6 +51,13 @@ module "route_tables" {
   depends_on          = [module.vpc]
 }
 
+# module "s3" {
+#   source = "../../modules/s3"
+
+#   environment = var.environment
+#   domain      = var.domain
+# }
+
 module "alb" {
   source = "../../modules/alb"
 
@@ -61,7 +68,7 @@ module "alb" {
   container_port    = var.container_port
   environment       = var.environment
   domain            = var.domain
-  depends_on        = [module.vpc]
+  depends_on        = [ module.vpc ]
 }
 
 module "ecs" {
@@ -79,4 +86,5 @@ module "ecs" {
   container_image = var.container_image
   container_port  = var.container_port
   domain          = var.domain
+  depends_on      = [ module.alb ]
 }
