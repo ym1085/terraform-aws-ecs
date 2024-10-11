@@ -61,7 +61,7 @@ TERAFORM-ECS-FARGATE/
 └── README.md
 ```
 
-## How to run the project?
+## How to run this project?
 
 ```shell
 # you must create aws iam user and have access key id & secret access key
