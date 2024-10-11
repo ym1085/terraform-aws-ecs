@@ -1,28 +1,64 @@
-# AWS Jenkins CI/CD
+# Terraform ECS & Jenkins
 
-> CI/CD deployment with Jenkins + Code Commit on AWS
+> Terraoforming for ecs environment configuration during jenkins configuration
 
-## Terraform package
+## Terraform package structure
 
-| 파일명            | 설명                                     |
-|-------------------|------------------------------------------|
-| `provider.tf`      | Terraform이 특정 클라우드 플랫폼과 통신하기 위한 모듈로 어떤 클라우드 플랫폼 사용할지 결정 |
-| `ecs.tf`           | ECS 클러스터 및 서비스 정의 파일         |
-| `alb.tf`           | Application Load Balancer 설정 파일      |
-| `network.tf`       | 네트워크 구성 (VPC, 서브넷 등) 설정 파일|
-| `security.tf`      | 보안 그룹 및 IAM 역할 설정 파일         |
-| `auto_scaling.tf`  | 오토스케일링 설정 파일                   |
-| `logs.tf`          | CloudWatch 로그 설정 파일               |
-| `variables.tf`     | Terraform 변수 정의 파일                 |
-| `outputs.tf`       | Terraform deploy 작업이 끝난 후 출력값 정의 |
+```shell
+TERAFORM-ECS-FARGATE/
+├── env/
+│   ├── dev/
+│   │   ├── .terraform.lock.hcl
+│   │   ├── graph.dot
+│   │   ├── graph.sh
+│   │   ├── main.tf
+│   │   ├── provider.tf
+│   │   ├── terraform.tfvars
+│   │   └── variables.tf
+│   ├── qa/
+│   └── stg/
+├── jenkins/
+├── modules/
+│   ├── alb/
+│   │   ├── main.tf
+│   │   ├── outputs.tf
+│   │   └── variables.tf
+│   ├── ecs/
+│   │   ├── main.tf
+│   │   ├── outputs.tf
+│   │   ├── task_definitions_bak.tpl
+│   │   ├── task_definitions.tpl
+│   │   └── variables.tf
+│   ├── gateway/
+│   │   ├── main.tf
+│   │   ├── outputs.tf
+│   │   └── variables.tf
+│   ├── route_tables/
+│   │   ├── main.tf
+│   │   └── variables.tf
+│   ├── security_groups/
+│   │   ├── main.tf
+│   │   ├── outputs.tf
+│   │   └── variables.tf
+│   ├── subnets/
+│   │   ├── main.tf
+│   │   ├── outputs.tf
+│   │   └── variables.tf
+│   └── vpc/
+│       ├── main.tf
+│       ├── outputs.tf
+│       └── variables.tf
+├── .gitignore
+└── README.md
+```
 
 ## How to execute terrform?
 
-> Jenkins CI/CD 테스트를 위해 간단한 ECS 환경을 구성하기 위해 Terraform 사용  
+> Jenkins CI/CD 테스트를 위해 간단한 ECS 환경을 구성하기 위해 Terraform 사용
 
 ```shell
 # move to module folder
-cd ./modules
+cd ./env/dev
 ```
 
 ```shell
@@ -64,3 +100,4 @@ $ terraform apply
 
 - [Hashicorp Terraform installation](https://developer.hashicorp.com/terraform/install)
 - [Deploying Containers on Amazon’s ECS using Fargate and Terraform: Part 2](https://medium.com/@bradford_hamilton/deploying-containers-on-amazons-ecs-using-fargate-and-terraform-part-2-2e6f6a3a957f)
+- [Curly - A DevOps team's Terraform adventure](https://helloworld.kurly.com/blog/terraform-adventure)
