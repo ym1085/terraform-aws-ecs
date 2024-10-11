@@ -1,8 +1,11 @@
 # Terraform ECS & Jenkins
 
-> Terraoforming for ecs environment configuration during jenkins configuration
+## Why use Terraform this repository?
 
-## Terraform package structure
+Finding it `inefficient` to create ECS resources manually in the `console`,  
+I `automated` the `ECS infrastructure` with Terraform while running CI/CD tests using Jenkins and CodeCommit.
+
+## Project Structure
 
 ```shell
 TERAFORM-ECS-FARGATE/
@@ -10,12 +13,13 @@ TERAFORM-ECS-FARGATE/
 │   ├── dev/
 │   │   ├── .terraform.lock.hcl
 │   │   ├── graph.dot
-│   │   ├── exec_alias.sh
-│   │   ├── exec_graph.sh
+│   │   ├── alias.sh
+│   │   ├── graph.sh
 │   │   ├── main.tf
 │   │   ├── provider.tf
 │   │   ├── terraform.tfvars
 │   │   └── variables.tf
+│   │   └── backend.tf
 │   ├── qa/
 │   └── stg/
 ├── jenkins/
@@ -37,6 +41,10 @@ TERAFORM-ECS-FARGATE/
 │   ├── route_tables/
 │   │   ├── main.tf
 │   │   └── variables.tf
+│   ├── s3/
+│   │   ├── main.tf
+│   │   ├── outputs.tf
+│   │   └── variables.tf
 │   ├── security_groups/
 │   │   ├── main.tf
 │   │   ├── outputs.tf
@@ -53,18 +61,32 @@ TERAFORM-ECS-FARGATE/
 └── README.md
 ```
 
-## How to execute terrform?
-
-> Jenkins CI/CD 테스트를 위해 간단한 ECS 환경을 구성하기 위해 Terraform 사용
+## How to run the project?
 
 ```shell
-# move to module folder
-cd ./env/dev
+# you must create aws iam user and have access key id & secret access key
+# In a production environment, role-based is recommended,
+# long-term security credentials are risky.
+$ aws configure
+AWS Access Key ID [None]: YOUR_ACCESS_KEY_ID
+AWS Secret Access Key [None]: YOUR_SECRET_ACCESS_KEY
+Default region name [None]: ap-northeast-2
+Default output format [None]: json
 ```
 
 ```shell
-# setting terraform alias persistently
-source ./alias.sh
+# check aws account info
+$ aws sts get-caller-identity
+{
+    "UserId": "AIDXXXXXXXXXXXXXX",
+    "Account": "123456789012",
+    "Arn": "arn:aws:iam::123456789012:user/YourUserName"
+}
+```
+
+```shell
+# move to /env/dev folder
+cd env/dev
 ```
 
 ```shell
@@ -78,6 +100,8 @@ environment = "dev"
 
 alb_listener_port = "80"
 container_port    = 3000
+
+# Private ECR Repository Image ARN
 container_image   = "6xxxxxxxxxxxxx.dkr.ecr.ap-northeast-2.amazonaws.com/nodejs"
 
 ecs_fargate_task_total_cpu = 2048
@@ -93,17 +117,29 @@ $ terraform init
 ```
 
 ```shell
+# validate terraform file
+$ terraform validate
+```
+
+```shell
 # check terraform plan
 $ terraform plan
 ```
 
 ```shell
-# apply terraform resource
+# check terraform graph
+# you must install 'graphviz' to see graph
+$ terraform graph > graph.dot
+```
+
+```shell
+# apply & deploy terraform resource
 $ terraform apply
 ```
 
 ## Reference
 
 - [Hashicorp Terraform installation](https://developer.hashicorp.com/terraform/install)
-- [Deploying Containers on Amazon’s ECS using Fargate and Terraform: Part 2](https://medium.com/@bradford_hamilton/deploying-containers-on-amazons-ecs-using-fargate-and-terraform-part-2-2e6f6a3a957f)
+- [Terraform registry documentation](https://registry.terraform.io/providers/hashicorp/aws/latest/docs)
+- [Deploying Containers on Amazon’s ECS using Fargate and Terraform](https://medium.com/@bradford_hamilton/deploying-containers-on-amazons-ecs-using-fargate-and-terraform-part-2-2e6f6a3a957f)
 - [Curly - A DevOps team's Terraform adventure](https://helloworld.kurly.com/blog/terraform-adventure)
