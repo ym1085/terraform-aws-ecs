@@ -137,3 +137,5 @@ dist
 
 # 모듈 디렉토리 
 .terraform/
+
+.DS_Store
