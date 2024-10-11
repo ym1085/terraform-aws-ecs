@@ -10,7 +10,8 @@ TERAFORM-ECS-FARGATE/
 │   ├── dev/
 │   │   ├── .terraform.lock.hcl
 │   │   ├── graph.dot
-│   │   ├── graph.sh
+│   │   ├── exec_alias.sh
+│   │   ├── exec_graph.sh
 │   │   ├── main.tf
 │   │   ├── provider.tf
 │   │   ├── terraform.tfvars
@@ -62,10 +63,15 @@ cd ./env/dev
 ```
 
 ```shell
+# setting terraform alias persistently
+source ./alias.sh
+```
+
+```shell
 # setting env variable to terraform.tfvars file
 cat <<EOF > terraform.tfvars
 vpc_cidr_block = "172.21.0.0/16"
-vpc_name       = "test_vpc"
+vpc_name       = "search-vpc-dev"
 
 az_count    = 2
 environment = "dev"

@@ -3,6 +3,7 @@ data "aws_availability_zones" "available" {}
 # Public Subnet 생성
 # Public Subnet CIDR 172.21.10.0/24, 172.21.20.0/24, 172.21.30.0/24
 resource "aws_subnet" "public" {
+  
   count                   = var.az_count
   cidr_block              = cidrsubnet(var.vpc_cidr_block, 8, (count.index + 1) * 10)
   availability_zone       = data.aws_availability_zones.available.names[count.index]
