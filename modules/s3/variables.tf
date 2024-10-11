@@ -1,7 +1,6 @@
 variable "domain" {
   description = "서비스 메인 이름 지정"
   type        = string
-  default     = "search"
 }
 
 variable "environment" {

@@ -39,6 +39,7 @@ resource "aws_ecs_service" "service" {
   task_definition = aws_ecs_task_definition.task_definition.arn
   launch_type     = "FARGATE"
   desired_count   = var.ecs_task_desired_count
+  health_check_grace_period_seconds = 100 # 서비스 생성 후 100초가 지나면 TG로 부터 상태 체크 시작
 
   network_configuration {
     subnets          = var.private_subnet_ids
@@ -50,6 +51,20 @@ resource "aws_ecs_service" "service" {
     target_group_arn = var.alb_target_group_arn
     container_name   = "${var.domain}-container-${var.environment}"
     container_port   = var.container_port
+  }
+
+  deployment_circuit_breaker {
+    enable = true
+    rollback = true
+  }
+
+  deployment_controller {
+    type = "ECS" # Rolling Update 방식
+    #type = "CODE_DEPLOY" # type: CODE_DEPLOY, ECS, EXTERNAL
+  }
+
+  tags = {
+    Name = "${var.domain}-service-${var.environment}"
   }
 
   depends_on = [var.alb_listener_arn]
