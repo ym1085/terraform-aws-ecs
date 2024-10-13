@@ -137,6 +137,11 @@ $ terraform graph > graph.dot
 $ terraform apply
 ```
 
+```shell
+# destory all terraform resource
+$ terraform destroy
+```
+
 ## Reference
 
 - [Hashicorp Terraform installation](https://developer.hashicorp.com/terraform/install)
