@@ -79,7 +79,7 @@ module "ecs" {
   container_image = var.container_image
   container_port  = var.container_port
   domain          = var.domain
-  depends_on      = [
+  depends_on = [
     module.vpc,
     module.subnets,
     module.security_groups,

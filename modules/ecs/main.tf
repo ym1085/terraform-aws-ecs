@@ -34,11 +34,11 @@ resource "aws_ecs_task_definition" "task_definition" {
 
 # ECS Service 생성
 resource "aws_ecs_service" "service" {
-  name            = "${var.domain}-service-${var.environment}"
-  cluster         = aws_ecs_cluster.cluster.id
-  task_definition = aws_ecs_task_definition.task_definition.arn
-  launch_type     = "FARGATE"
-  desired_count   = var.ecs_task_desired_count
+  name                              = "${var.domain}-service-${var.environment}"
+  cluster                           = aws_ecs_cluster.cluster.id
+  task_definition                   = aws_ecs_task_definition.task_definition.arn
+  launch_type                       = "FARGATE"
+  desired_count                     = var.ecs_task_desired_count
   health_check_grace_period_seconds = 100 # 서비스 생성 후 100초가 지나면 TG로 부터 상태 체크 시작
 
   network_configuration {
@@ -54,7 +54,7 @@ resource "aws_ecs_service" "service" {
   }
 
   deployment_circuit_breaker {
-    enable = true
+    enable   = true
     rollback = true
   }
 
