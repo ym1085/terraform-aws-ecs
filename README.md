@@ -1,4 +1,4 @@
-# Terraform ECS & Jenkins
+# Terraform ECS
 
 ## Why use Terraform this repository?
 
