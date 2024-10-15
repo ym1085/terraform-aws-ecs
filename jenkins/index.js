@@ -5,9 +5,17 @@ const port = 3000;
 
 // HTTP 서버 생성
 const server = http.createServer((req, res) => {
-  res.statusCode = 200;
-  res.setHeader("Content-Type", "text/plain");
-  res.end("Hello, World!\n");
+  if (req.url === "/health-check") {
+    // /health-check 경로에 대한 응답
+    res.statusCode = 200;
+    res.setHeader("Content-Type", "application/json");
+    res.end(JSON.stringify({ status: "OK" }));
+  } else {
+    // 다른 경로에 대한 응답
+    res.statusCode = 200;
+    res.setHeader("Content-Type", "text/plain");
+    res.end("Hello, World!\n");
+  }
 });
 
 // 서버 시작

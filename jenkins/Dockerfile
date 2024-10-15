@@ -4,6 +4,8 @@ FROM node:10.13-alpine
 # 작업 디렉토리 설정
 WORKDIR /home/app
 
+RUN apk add --no-cache curl
+
 # 소스 코드 복사
 COPY . .
 
