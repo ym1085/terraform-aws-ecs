@@ -2,8 +2,8 @@
 
 ## Why use Terraform this repository?
 
-Finding it `inefficient` to create ECS resources manually in the `console`,  
-I `automated` the `ECS infrastructure` with Terraform while running CI/CD tests using Jenkins and CodeCommit.
+콘솔에서 ECS 리소스를 수동으로 생성하는 것이 상당히 비효율적이라 판단하여,  
+Terraform으로 ECS 관련 인프라는 자동화하고, Jenkins와 CodeCommit을 통해 CI/CD 테스트를 진행.
 
 ## Project Structure
 
