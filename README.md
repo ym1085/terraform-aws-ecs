@@ -2,8 +2,7 @@
 
 ## Why use Terraform this repository?
 
-I found it quite inefficient to manually create ECS resources from the console.  
-So I automated the ECS-related infrastructure with Terraform.
+I found making resources in the console was inefficient, so I used IaC tools instead.
 
 ## Project Structure
 
