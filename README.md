@@ -1,11 +1,6 @@
 # Terraform ECS
 
-## Why use Terraform this repository?
-
-Finding it `inefficient` to create ECS resources manually in the `console`,  
-I `automated` the `ECS infrastructure` with Terraform while running CI/CD tests using Jenkins and CodeCommit.
-
-## Project Structure
+## Package Structure
 
 ```shell
 TERAFORM-ECS-FARGATE/
@@ -61,12 +56,10 @@ TERAFORM-ECS-FARGATE/
 └── README.md
 ```
 
-## How to run this project?
+## Installation & Setup
 
 ```shell
-# you must create aws iam user and have access key id & secret access key
-# In a production environment, role-based is recommended,
-# long-term security credentials are risky.
+# enter your aws account on local
 $ aws configure
 AWS Access Key ID [None]: YOUR_ACCESS_KEY_ID
 AWS Secret Access Key [None]: YOUR_SECRET_ACCESS_KEY
@@ -127,12 +120,6 @@ $ terraform plan
 ```
 
 ```shell
-# check terraform graph
-# you must install 'graphviz' to see graph
-$ terraform graph > graph.dot
-```
-
-```shell
 # apply & deploy terraform resource
 $ terraform apply
 ```
@@ -141,10 +128,3 @@ $ terraform apply
 # destory all terraform resource
 $ terraform destroy
 ```
-
-## Reference
-
-- [Hashicorp Terraform installation](https://developer.hashicorp.com/terraform/install)
-- [Terraform registry documentation](https://registry.terraform.io/providers/hashicorp/aws/latest/docs)
-- [Deploying Containers on Amazon’s ECS using Fargate and Terraform](https://medium.com/@bradford_hamilton/deploying-containers-on-amazons-ecs-using-fargate-and-terraform-part-2-2e6f6a3a957f)
-- [Curly - A DevOps team's Terraform adventure](https://helloworld.kurly.com/blog/terraform-adventure)
