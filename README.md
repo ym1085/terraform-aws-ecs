@@ -3,7 +3,7 @@
 ## Package Structure
 
 ```shell
-TERAFORM-ECS-FARGATE/
+TERAFORM-AWS-ECS/
 ├── env/
 │   ├── dev/
 │   │   ├── .terraform.lock.hcl
